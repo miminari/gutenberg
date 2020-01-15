@@ -29,6 +29,8 @@ import {
 	parse,
 } from '@wordpress/blocks';
 import { SVG, Rect, G, Path } from '@wordpress/components';
+import { stripHTML } from '@wordpress/dom';
+import { __, sprintf } from '@wordpress/i18n';
 
 /**
  * A block selection object.
@@ -1536,4 +1538,130 @@ export function didAutomaticChange( state ) {
  */
 export function __unstableGetSelectedMountedBlock( state ) {
 	return state.selectedMountedBlock;
+}
+
+/**
+ * Get the label for the block, usually this is either the block title,
+ * or the value of the attribute denoted by the block's `label` property.
+ *
+ * @param {Object} state    Store state.
+ * @param {string} clientId ClientId for the block.
+ *
+ * @return {string} The block label.
+ */
+export function getBlockLabel( state, clientId ) {
+	const blockName = getBlockName( state, clientId );
+
+	const {
+		__experimentalLabel: labelAttribute,
+		title,
+	} = getBlockType( blockName );
+
+	if ( ! labelAttribute ) {
+		return title;
+	}
+
+	const attributes = getBlockAttributes( state, clientId );
+	const label = attributes[ labelAttribute ];
+
+	if ( ! label ) {
+		return title;
+	}
+
+	// Strip any HTML (i.e. RichText formatting) before returning.
+	return stripHTML( label );
+}
+
+/**
+ * Get a label for the block for use by screenreaders, this is more descriptive
+ * than the visual label and includes the block title and the value of the
+ * `getAccessibilityLabel` function if it's specified.
+ *
+ * @param {Object} state    Store state.
+ * @param {string} clientId ClientId for the block.
+ * @param {"horizontal"|"vertical"} [direction="vertical"] The direction blocks are layed out in,
+ *                                                         can be 'horizontal' or 'vertical'.
+ *
+ * @return {string} The accessibility label for the block.
+ */
+export function getAccessibleBlockLabel( state, clientId, direction = 'vertical' ) {
+	const blockName = getBlockName( state, clientId );
+
+	const {
+		__experimentalGetAccessibilityLabel: getAccessibilityLabel,
+		title,
+	} = getBlockType( blockName );
+
+	const rootClientId = getBlockRootClientId( state, clientId );
+
+	const attributes = getBlockAttributes( state, clientId );
+
+	// First, attempt to get the accessibility label if the block has one defined.
+	let label = getAccessibilityLabel ? stripHTML( getAccessibilityLabel( attributes ) ) : undefined;
+
+	// If there's no accessibility label, use the block label.
+	if ( ! label ) {
+		label = getBlockLabel( state, clientId );
+	}
+
+	const position = getBlockIndex( state, clientId, rootClientId ) + 1;
+
+	// getBlockLabel returns the block title as a fallback when there's no label,
+	// if it did return the title, this function needs to avoid adding the
+	// title twice within the accessible label. Use this `hasLabel` boolean to
+	// handle that.
+	const hasLabel = !! label && label !== title;
+
+	const hasPosition = position !== undefined;
+
+	if ( hasPosition && direction === 'vertical' ) {
+		if ( hasLabel ) {
+			return sprintf(
+				/* translators: accessibility text. %1: The block title, %2: The block row number, %3: The block label.. */
+				__( '%1$s Block. Row %2$d. %3$s' ),
+				title,
+				position,
+				label
+			);
+		}
+
+		return sprintf(
+			/* translators: accessibility text. %s: The block title, %d The block row number. */
+			__( '%s Block. Row %d' ),
+			title,
+			position,
+		);
+	} else if ( hasPosition && direction === 'horizontal' ) {
+		if ( hasLabel ) {
+			return sprintf(
+				/* translators: accessibility text. %1: The block title, %2: The block column number, %3: The block label.. */
+				__( '%1$s Block. Column %2$d. %3$s' ),
+				title,
+				position,
+				label
+			);
+		}
+
+		return sprintf(
+			/* translators: accessibility text. %s: The block title, %d The block column number. */
+			__( '%s Block. Column %d' ),
+			title,
+			position,
+		);
+	}
+
+	if ( hasLabel ) {
+		return sprintf(
+			/* translators: accessibility text. %1: The block title. %2: The block label. */
+			__( '%1$s Block. %2$s' ),
+			title,
+			label
+		);
+	}
+
+	return sprintf(
+		/* translators: accessibility text. %s: The block title. */
+		__( '%s Block' ),
+		title
+	);
 }

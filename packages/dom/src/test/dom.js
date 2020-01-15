@@ -164,5 +164,11 @@ describe( 'DOM', () => {
 			expect( stripHTML( html ) ).toBe( 'This will not throw "Error"' );
 			expect( () => stripHTML( html ) ).not.toThrow();
 		} );
+
+		it( 'expects strings and an empty string for falsey values', () => {
+			expect( stripHTML( '' ) ).toBe( '' );
+			expect( stripHTML( undefined ) ).toBe( '' );
+			expect( stripHTML( null ) ).toBe( '' );
+		} );
 	} );
 } );

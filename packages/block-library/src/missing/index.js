@@ -26,18 +26,14 @@ export const settings = {
 		html: false,
 		reusable: false,
 	},
-	__experimentalLabel( attributes, { context } ) {
-		if ( context === 'accessibility' ) {
-			const { originalName } = attributes;
+	__experimentalGetAccessibilityLabel( { originalName } ) {
+		const originalBlockType = originalName ? getBlockType( originalName ) : undefined;
 
-			const originalBlockType = originalName ? getBlockType( originalName ) : undefined;
-
-			if ( originalBlockType ) {
-				return originalBlockType.settings.title || originalName;
-			}
-
-			return '';
+		if ( originalBlockType ) {
+			return originalBlockType.settings.title || originalName;
 		}
+
+		return '';
 	},
 	edit,
 	save,

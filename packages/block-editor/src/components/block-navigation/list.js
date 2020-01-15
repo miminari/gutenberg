@@ -9,9 +9,9 @@ import classnames from 'classnames';
  */
 import { Button } from '@wordpress/components';
 import {
-	__experimentalGetBlockLabel as getBlockLabel,
 	getBlockType,
 } from '@wordpress/blocks';
+import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 
 /**
@@ -19,6 +19,33 @@ import { __ } from '@wordpress/i18n';
  */
 import BlockIcon from '../block-icon';
 import ButtonBlockAppender from '../button-block-appender';
+
+function BlockNavigationItem( { block, isSelected, onClick } ) {
+	const { clientId, name } = block;
+	const blockIcon = getBlockType( name ).icon;
+	const blockLabel = useSelect(
+		( select ) => select( 'core/block-editor' ).getBlockLabel( clientId ),
+		[ clientId ]
+	);
+
+	return (
+		<li key={ clientId }>
+			<div className="block-editor-block-navigation__item">
+				<Button
+					className={ classnames( 'block-editor-block-navigation__item-button', {
+						'is-selected': isSelected,
+					} ) }
+					onClick={ onClick }
+				>
+					<BlockIcon icon={ blockIcon } showColors />
+					{ blockLabel }
+					{ isSelected && <span className="screen-reader-text">{ __( '(selected block)' ) }</span> }
+				</Button>
+			</div>
+
+		</li>
+	);
+}
 
 export default function BlockNavigationList( {
 	blocks,
@@ -40,23 +67,13 @@ export default function BlockNavigationList( {
 		/* eslint-disable jsx-a11y/no-redundant-roles */
 		<ul className="block-editor-block-navigation__list" role="list">
 			{ map( omitBy( blocks, isNil ), ( block ) => {
-				const blockType = getBlockType( block.name );
-				const isSelected = block.clientId === selectedBlockClientId;
-
 				return (
-					<li key={ block.clientId }>
-						<div className="block-editor-block-navigation__item">
-							<Button
-								className={ classnames( 'block-editor-block-navigation__item-button', {
-									'is-selected': isSelected,
-								} ) }
-								onClick={ () => selectBlock( block.clientId ) }
-							>
-								<BlockIcon icon={ blockType.icon } showColors />
-								{ getBlockLabel( blockType, block.attributes ) }
-								{ isSelected && <span className="screen-reader-text">{ __( '(selected block)' ) }</span> }
-							</Button>
-						</div>
+					<BlockNavigationItem
+						key={ block.clientId }
+						block={ block }
+						onClick={ () => selectBlock( block.clientId ) }
+						isSelected={ block.clientId === selectedBlockClientId }
+					>
 						{ showNestedBlocks && !! block.innerBlocks && !! block.innerBlocks.length && (
 							<BlockNavigationList
 								blocks={ block.innerBlocks }
@@ -67,7 +84,7 @@ export default function BlockNavigationList( {
 								showNestedBlocks
 							/>
 						) }
-					</li>
+					</BlockNavigationItem>
 				);
 			} ) }
 			{ shouldShowAppender && (

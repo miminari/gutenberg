@@ -27,9 +27,12 @@ export const settings = {
 		html: false,
 	},
 
-	__experimentalLabel: ( { label } ) => label,
+	__experimentalLabel: 'label',
+
+	__experimentalGetAccessibilityLabel( { label } ) {
+		return label;
+	},
 
 	edit,
 	save,
 };
-

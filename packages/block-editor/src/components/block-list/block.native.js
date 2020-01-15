@@ -17,7 +17,6 @@ import { compose, withPreferredColorScheme } from '@wordpress/compose';
 import {
 	getBlockType,
 	getUnregisteredTypeHandlerName,
-	__experimentalGetAccessibleBlockLabel as getAccessibleBlockLabel,
 } from '@wordpress/blocks';
 import { __ } from '@wordpress/i18n';
 
@@ -180,20 +179,16 @@ class BlockListBlock extends Component {
 
 	render() {
 		const {
-			attributes,
-			blockType,
+			accessibilityLabel,
 			clientId,
 			icon,
 			isSelected,
 			isValid,
-			order,
 			title,
 			showFloatingToolbar,
 			parentId,
 			isTouchable,
 		} = this.props;
-
-		const accessibilityLabel = getAccessibleBlockLabel( blockType, attributes, order + 1 );
 
 		return (
 			<>
@@ -232,6 +227,7 @@ class BlockListBlock extends Component {
 export default compose( [
 	withSelect( ( select, { clientId, rootClientId } ) => {
 		const {
+			getAccessibleBlockLabel,
 			getBlockIndex,
 			getBlocks,
 			isBlockSelected,
@@ -253,7 +249,7 @@ export default compose( [
 		const isSelected = isBlockSelected( clientId );
 		const isLastBlock = order === getBlocks().length - 1;
 		const block = __unstableGetBlockWithoutInnerBlocks( clientId );
-		const { name, attributes, isValid } = block || {};
+		const { name, isValid } = block || {};
 
 		const isUnregisteredBlock = name === getUnregisteredTypeHandlerName();
 		const blockType = getBlockType( name || 'core/missing' );
@@ -290,13 +286,13 @@ export default compose( [
 		const isInnerBlockHolder = name === getGroupingBlockName();
 		const isRootListInnerBlockHolder = ! isSelectedBlockNested && isInnerBlockHolder;
 
+		const accessibilityLabel = getAccessibleBlockLabel( clientId );
+
 		return {
 			icon,
 			name: name || 'core/missing',
-			order,
+			accessibilityLabel,
 			title,
-			attributes,
-			blockType,
 			isLastBlock,
 			isSelected,
 			isValid,
