@@ -29,7 +29,7 @@ import {
 	parse,
 } from '@wordpress/blocks';
 import { SVG, Rect, G, Path } from '@wordpress/components';
-import { stripHTML } from '@wordpress/dom';
+import { toPlainText } from '@wordpress/rich-text';
 import { __, sprintf } from '@wordpress/i18n';
 
 /**
@@ -1569,7 +1569,7 @@ export function getBlockLabel( state, clientId ) {
 	}
 
 	// Strip any HTML (i.e. RichText formatting) before returning.
-	return stripHTML( label );
+	return toPlainText( label );
 }
 
 /**
@@ -1597,7 +1597,7 @@ export function getAccessibleBlockLabel( state, clientId, direction = 'vertical'
 	const attributes = getBlockAttributes( state, clientId );
 
 	// First, attempt to get the accessibility label if the block has one defined.
-	let label = getAccessibilityLabel ? stripHTML( getAccessibilityLabel( attributes ) ) : undefined;
+	let label = getAccessibilityLabel ? toPlainText( getAccessibilityLabel( attributes ) ) : undefined;
 
 	// If there's no accessibility label, use the block label.
 	if ( ! label ) {

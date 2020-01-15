@@ -1,7 +1,7 @@
 /**
  * Internal dependencies
  */
-import { isHorizontalEdge, placeCaretAtHorizontalEdge, isTextField, stripHTML } from '../dom';
+import { isHorizontalEdge, placeCaretAtHorizontalEdge, isTextField } from '../dom';
 
 describe( 'DOM', () => {
 	let parent;
@@ -151,24 +151,6 @@ describe( 'DOM', () => {
 
 		it( 'should return true for a normal div element', () => {
 			expect( isTextField( document.createElement( 'div' ) ) ).toBe( false );
-		} );
-	} );
-
-	describe( 'stripHTML', () => {
-		it( 'removes any HTML from a text string', () => {
-			expect( stripHTML( 'This is <em>emphasized</em>' ) ).toBe( 'This is emphasized' );
-		} );
-
-		it( 'removes script tags, but does not execute them', () => {
-			const html = 'This will not <script>throw "Error"</script>';
-			expect( stripHTML( html ) ).toBe( 'This will not throw "Error"' );
-			expect( () => stripHTML( html ) ).not.toThrow();
-		} );
-
-		it( 'expects strings and an empty string for falsey values', () => {
-			expect( stripHTML( '' ) ).toBe( '' );
-			expect( stripHTML( undefined ) ).toBe( '' );
-			expect( stripHTML( null ) ).toBe( '' );
 		} );
 	} );
 } );
