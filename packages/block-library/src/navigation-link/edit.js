@@ -149,7 +149,7 @@ function NavigationLinkEdit( {
 					'is-editing': isSelected || isParentOfSelectedBlock,
 					'is-selected': isSelected,
 					'has-link': !! url,
-					'has-child': hasChild,
+					'has-child': hasDescendants,
 				} ) }
 			>
 				<div>
@@ -198,14 +198,12 @@ function NavigationLinkEdit( {
 
 export default compose( [
 	withSelect( ( select, ownProps ) => {
-		const { getClientIdsOfDescendants, hasSelectedInnerBlock, getBlocks } = select( 'core/block-editor' );
+		const { getClientIdsOfDescendants, hasSelectedInnerBlock } = select( 'core/block-editor' );
 		const { clientId } = ownProps;
-		const innerBlocks = getBlocks( clientId );
 
 		return {
 			isParentOfSelectedBlock: hasSelectedInnerBlock( clientId, true ),
 			hasDescendants: !! getClientIdsOfDescendants( [ clientId ] ).length,
-			hasChild: !! innerBlocks.length,
 		};
 	} ),
 	withDispatch( ( dispatch, ownProps, registry ) => {
