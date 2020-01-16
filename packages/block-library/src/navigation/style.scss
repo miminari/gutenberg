@@ -41,6 +41,8 @@
 		& > li {
 
 			& > a {
+				display: flex;
+				align-items: center;
 				padding-left: 0;
 
 				@include break-small {
@@ -54,6 +56,16 @@
 
 			&:last-of-type > a {
 				padding-right: 0;
+			}
+
+			// Make submenu icon inherit current text color
+			& > a svg {
+				fill: currentColor;
+			}
+
+			// Add some space between link text & submenu icon
+			& > a > span + span {
+				margin-left: 4px;
 			}
 		}
 
@@ -147,18 +159,6 @@
 			&:last-child {
 				padding-bottom: 13px;
 			}
-		}
-	}
-
-	// Top-level sub-menu indicators
-	& .has-sub-menu > a {
-
-		&::after {
-			content: "\00a0\25BC";
-			display: inline-block;
-			font-size: 0.6rem;
-			height: inherit;
-			width: inherit;
 		}
 	}
 
