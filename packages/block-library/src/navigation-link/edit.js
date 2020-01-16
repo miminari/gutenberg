@@ -39,7 +39,6 @@ import { Fragment, useState, useEffect } from '@wordpress/element';
 
 function NavigationLinkEdit( {
 	attributes,
-	hasChild,
 	hasDescendants,
 	isSelected,
 	isParentOfSelectedBlock,
