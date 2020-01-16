@@ -9,6 +9,11 @@ import classnames from 'classnames';
 import { withFilters } from '@wordpress/components';
 import { getBlockDefaultClassName, hasBlockSupport, getBlockType } from '@wordpress/blocks';
 
+/**
+ * Internal dependencies
+ */
+import { Block } from '../block-list/block';
+
 export const Edit = ( props ) => {
 	const { attributes = {}, name } = props;
 	const blockType = getBlockType( name );
@@ -28,7 +33,7 @@ export const Edit = ( props ) => {
 	// them preferentially as the render value for the block.
 	const Component = blockType.edit || blockType.save;
 
-	return <Component { ...props } className={ className } />;
+	return <Component Block={ Block } { ...props } className={ className } />;
 };
 
 export default withFilters( 'editor.BlockEdit' )( Edit );
