@@ -91,9 +91,9 @@ describe( 'Basic rendering', () => {
 
 		const toggleState = container.querySelector( 'input[type="checkbox"]' ).checked;
 
-		const defaultControlGroup = container.querySelector( '.block-editor-responsive-block-control__group--default' );
+		const defaultControlGroup = container.querySelector( '.block-editor-responsive-block-control__group:not(.is-responsive)' );
 
-		const responsiveControlGroup = container.querySelector( '.block-editor-responsive-block-control__group--responsive' );
+		const responsiveControlGroup = container.querySelector( '.block-editor-responsive-block-control__group.is-responsive' );
 
 		expect( container.innerHTML ).not.toBe( '' );
 
@@ -198,8 +198,8 @@ describe( 'Default and Responsive modes', () => {
 			);
 		} );
 
-		const defaultControlGroup = container.querySelector( '.block-editor-responsive-block-control__group--default' );
-		const responsiveControlGroup = container.querySelector( '.block-editor-responsive-block-control__group--responsive' );
+		const defaultControlGroup = container.querySelector( '.block-editor-responsive-block-control__group:not(.is-responsive)' );
+		const responsiveControlGroup = container.querySelector( '.block-editor-responsive-block-control__group.is-responsive' );
 
 		expect( defaultControlGroup ).toBeNull();
 		expect( responsiveControlGroup ).not.toBeNull();
@@ -275,8 +275,8 @@ describe( 'Default and Responsive modes', () => {
 			);
 		} );
 
-		let defaultControlGroup = container.querySelector( '.block-editor-responsive-block-control__group--default' );
-		let responsiveControlGroup = container.querySelector( '.block-editor-responsive-block-control__group--responsive' );
+		let defaultControlGroup = container.querySelector( '.block-editor-responsive-block-control__group:not(.is-responsive)' );
+		let responsiveControlGroup = container.querySelector( '.block-editor-responsive-block-control__group.is-responsive' );
 
 		// Select elements based on what the user can see
 		const toggleLabel = Array.from( container.querySelectorAll( 'label' ) ).find( ( label ) => label.innerHTML.includes( 'Use the same padding on all screensizes' ) );
@@ -291,8 +291,8 @@ describe( 'Default and Responsive modes', () => {
 			Simulate.change( toggleInput, { target: { checked: false } } );
 		} );
 
-		defaultControlGroup = container.querySelector( '.block-editor-responsive-block-control__group--default' );
-		responsiveControlGroup = container.querySelector( '.block-editor-responsive-block-control__group--responsive' );
+		defaultControlGroup = container.querySelector( '.block-editor-responsive-block-control__group:not(.is-responsive)' );
+		responsiveControlGroup = container.querySelector( '.block-editor-responsive-block-control__group.is-responsive' );
 
 		expect( defaultControlGroup ).toBeNull();
 		expect( responsiveControlGroup ).not.toBeNull();
@@ -302,8 +302,8 @@ describe( 'Default and Responsive modes', () => {
 			Simulate.change( toggleInput, { target: { checked: true } } );
 		} );
 
-		defaultControlGroup = container.querySelector( '.block-editor-responsive-block-control__group--default' );
-		responsiveControlGroup = container.querySelector( '.block-editor-responsive-block-control__group--responsive' );
+		defaultControlGroup = container.querySelector( '.block-editor-responsive-block-control__group:not(.is-responsive)' );
+		responsiveControlGroup = container.querySelector( '.block-editor-responsive-block-control__group.is-responsive' );
 
 		expect( defaultControlGroup ).not.toBeNull();
 		expect( responsiveControlGroup ).toBeNull();

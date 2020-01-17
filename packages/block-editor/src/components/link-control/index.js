@@ -202,7 +202,7 @@ function LinkControl( {
 							<span className="block-editor-link-control__search-item-info">{ filterURLForDisplay( safeDecodeURI( value.url ) ) || '' }</span>
 						</span>
 
-						<Button isSecondary onClick={ setMode( MODE_EDIT ) } className="block-editor-link-control__search-item-action block-editor-link-control__search-item-action--edit">
+						<Button isSecondary onClick={ setMode( MODE_EDIT ) } className="block-editor-link-control__search-item-action">
 							{ __( 'Edit' ) }
 						</Button>
 					</div>
