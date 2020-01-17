@@ -5,10 +5,6 @@ import { Toolbar, Button } from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { useEffect, useRef } from '@wordpress/element';
 import { BACKSPACE, DELETE } from '@wordpress/keycodes';
-import {
-	getBlockType,
-	__experimentalGetAccessibleBlockLabel as getAccessibleBlockLabel,
-} from '@wordpress/blocks';
 
 /**
  * Internal dependencies
@@ -22,20 +18,16 @@ import BlockTitle from '../block-title';
  *
  * @param {string} props          Component props.
  * @param {string} props.clientId Client ID of block.
+ * @param {"horizonal"|"vertical"} props.moverDirection A string representing the direction of
+ *                                                      movers, can be 'horizontal' or 'vertical'.
  *
  * @return {WPComponent} The component to be rendered.
  */
-function BlockBreadcrumb( { clientId, rootClientId, moverDirection, ...props } ) {
-	const selected = useSelect( ( select ) => {
-		const {
-			__unstableGetBlockWithoutInnerBlocks,
-			getBlockIndex,
-		} = select( 'core/block-editor' );
-		const index = getBlockIndex( clientId, rootClientId );
-		const { name, attributes } = __unstableGetBlockWithoutInnerBlocks( clientId );
-		return { index, name, attributes };
-	}, [ clientId, rootClientId ] );
-	const { index, name, attributes } = selected;
+function BlockBreadcrumb( { clientId, moverDirection, ...props } ) {
+	const label = useSelect(
+		( select ) => select( 'core/block-editor' ).getAccessibleBlockLabel( clientId, moverDirection ),
+		[ clientId, moverDirection ]
+	);
 	const {
 		setNavigationMode,
 		removeBlock,
@@ -55,9 +47,6 @@ function BlockBreadcrumb( { clientId, rootClientId, moverDirection, ...props } )
 			event.preventDefault();
 		}
 	}
-
-	const blockType = getBlockType( name );
-	const label = getAccessibleBlockLabel( blockType, attributes, index + 1, moverDirection );
 
 	return (
 		<div className="block-editor-block-list__breadcrumb" { ...props }>
