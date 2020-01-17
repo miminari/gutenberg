@@ -20,7 +20,7 @@ import { __ } from '@wordpress/i18n';
 import BlockIcon from '../block-icon';
 import ButtonBlockAppender from '../button-block-appender';
 
-function BlockNavigationItem( { block, isSelected, onClick } ) {
+function BlockNavigationRow( { block, isSelected, onClick, children } ) {
 	const { clientId, name } = block;
 	const blockIcon = getBlockType( name ).icon;
 	const blockLabel = useSelect(
@@ -29,7 +29,7 @@ function BlockNavigationItem( { block, isSelected, onClick } ) {
 	);
 
 	return (
-		<li key={ clientId }>
+		<li>
 			<div className="block-editor-block-navigation__item">
 				<Button
 					className={ classnames( 'block-editor-block-navigation__item-button', {
@@ -42,7 +42,7 @@ function BlockNavigationItem( { block, isSelected, onClick } ) {
 					{ isSelected && <span className="screen-reader-text">{ __( '(selected block)' ) }</span> }
 				</Button>
 			</div>
-
+			{ children }
 		</li>
 	);
 }
@@ -68,7 +68,7 @@ export default function BlockNavigationList( {
 		<ul className="block-editor-block-navigation__list" role="list">
 			{ map( omitBy( blocks, isNil ), ( block ) => {
 				return (
-					<BlockNavigationItem
+					<BlockNavigationRow
 						key={ block.clientId }
 						block={ block }
 						onClick={ () => selectBlock( block.clientId ) }
@@ -84,7 +84,7 @@ export default function BlockNavigationList( {
 								showNestedBlocks
 							/>
 						) }
-					</BlockNavigationItem>
+					</BlockNavigationRow>
 				);
 			} ) }
 			{ shouldShowAppender && (
