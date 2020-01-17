@@ -34,9 +34,8 @@ _Returns_
 
 <a name="getAccessibleBlockLabel" href="#getAccessibleBlockLabel">#</a> **getAccessibleBlockLabel**
 
-Get a label for the block for use by screenreaders, this is more descriptive
-than the visual label and includes the block title and the value of the
-`getAccessibilityLabel` function if it's specified.
+Get a label for the block for use by screenreaders, this can include the block title, the
+position of the block, and the value of the `getAccessibilityLabel` function if it's specified.
 
 _Parameters_
 
