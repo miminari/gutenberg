@@ -14,7 +14,7 @@ describe( 'toPlainText', () => {
 		expect( () => toPlainText( html ) ).not.toThrow();
 	} );
 
-	it( 'expects strings and an empty string for falsey values', () => {
+	it( 'expects strings and returns an empty string for falsey values', () => {
 		expect( toPlainText( '' ) ).toBe( '' );
 		expect( toPlainText( undefined ) ).toBe( '' );
 		expect( toPlainText( null ) ).toBe( '' );
